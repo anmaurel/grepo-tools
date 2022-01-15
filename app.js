@@ -43,9 +43,7 @@ import utils from "./app/utils.js";
 
         if (args.length == 1) {
             if (command === "run") {
-                //
                 info.credentials.forEach(async (account) => {
-                    //
                     if (args[0] === account.WORLD_ID) {
                         message.channel.send(`Bot ${args[0]} launched`);
 
@@ -73,8 +71,7 @@ import utils from "./app/utils.js";
                                 await utils.sleep(300000);
                             }
                         } catch (error) {
-                            message.channel.send(error);
-                            // console.log(error);
+                            message.channel.send(error.toString());
                         }
                     } else {
                         message.channel.send(`World ${args[0]} not found`);

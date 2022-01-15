@@ -35,7 +35,5 @@ export default {
         await page.waitForTimeout(utils.random(600, 1000));
         await page.click("#fto_claim_button");
         await page.waitForTimeout(utils.random(600, 1000));
-
-        // console.log(`${utils.datetimeNow()} | farmer x${repetition}`);
     },
 };
