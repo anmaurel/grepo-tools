@@ -17,25 +17,31 @@ import utils from './app/utils.js'
     })
 
     info.credentials.forEach(async (account) => {
-        let page = await browser.newPage()
-        await page.setUserAgent(userAgent.toString())
-
-        try {
-            await page.goto(`https://fr.grepolis.com/`, {
-                waitUntil: 'networkidle2',
-                timeout: 0,
-            })
-
-            let user = new User(page, account.USERNAME, account.PASSWORD, account.WORLD)
-            await user.auth()
-
-            for (let rep = 1; rep < 1000; rep++) {
-                await utils.sleep(utils.random(200, 4000))
-                await premium.collectResources(page)
-                await utils.sleep(600000)
-            }
-        } catch (error) {
-            console.log(error)
-        }
+        process(browser, account)
     })
 })()
+
+async function process(browser, account) {
+    let page = await browser.newPage()
+    await page.setUserAgent(userAgent.toString())
+    await page.setDefaultTimeout(10000)
+
+    try {
+        await page.goto(`https://fr.grepolis.com/`, {
+            waitUntil: 'networkidle2',
+            timeout: 0,
+        })
+
+        let user = new User(page, account.USERNAME, account.PASSWORD, account.WORLD)
+        await user.auth()
+
+        for (let rep = 1; rep < 1000; rep++) {
+            await utils.sleep(utils.random(200, 4000))
+            await premium.collectResources(page)
+            await utils.sleep(600000)
+        }
+    } catch (error) {
+        await page.close()
+        process(browser, account)
+    }
+}
