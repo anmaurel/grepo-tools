@@ -3,8 +3,6 @@ services:
     node-server:
         container_name: grepo-tools_server
         build: ./
-        ports:
-            - 9000:9000
         networks:
             default:
                 ipv4_address: 192.168.1.86
