@@ -36,8 +36,10 @@ async function process(browser, account) {
         await user.auth()
 
         for (let rep = 1; rep < 1000; rep++) {
+            const time = utils.datetimeNow()
             await utils.sleep(utils.random(200, 4000))
             await premium.collectResources(page)
+            console.log(`${time} - x${rep}`)
             await utils.sleep(600000)
         }
     } catch (error) {
