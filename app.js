@@ -13,7 +13,7 @@ import utils from './app/utils.js'
     const browser = await puppeteer.launch({
         args: [`--window-size=1920,1080`, '--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
         defaultViewport: null,
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
     })
 
@@ -23,6 +23,9 @@ import utils from './app/utils.js'
 
     const prefix = '!'
 
+    const channelGeneral = client.channels.cache.get('764795042468200482')
+    const channelLogs = client.channels.cache.get('764796155824439296')
+
     client.on('messageCreate', async (message) => {
         if (message.author.bot) return
         if (!message.content.startsWith(prefix)) return
@@ -30,9 +33,6 @@ import utils from './app/utils.js'
         const commandBody = message.content.slice(prefix.length)
         const args = commandBody.split(' ')
         const command = args.shift().toLowerCase()
-
-        const channelGeneral = client.channels.cache.get('764795042468200482')
-        const channelLogs = client.channels.cache.get('764796155824439296')
 
         setTimeout(() => message.delete(), 1000)
 
@@ -42,28 +42,7 @@ import utils from './app/utils.js'
                     if (args[0] === account.WORLD_ID) {
                         channelLogs.send(`${args[0]} launched`)
 
-                        let page = await browser.newPage()
-                        await page.setUserAgent(userAgent.toString())
-
-                        try {
-                            await page.goto(`https://fr.grepolis.com/`, {
-                                waitUntil: 'networkidle2',
-                                timeout: 0,
-                            })
-
-                            let user = new User(page, account.USERNAME, account.PASSWORD, account.WORLD)
-                            await user.auth()
-
-                            for (let rep = 1; rep < 1000; rep++) {
-                                await utils.sleep(utils.random(200, 4000))
-                                await premium.collectResources(page, rep)
-                                channelLogs.send(`${args[0]} recolt ${rep}`)
-                                await utils.sleep(600000)
-                            }
-                        } catch (error) {
-                            console.log(error)
-                            channelLogs.send(error.toString())
-                        }
+                        process(browser, account, channelLogs)
                     } else {
                         channelLogs.send(`World ${args[0]} not found`)
                     }
@@ -93,3 +72,30 @@ import utils from './app/utils.js'
 
     client.login(info.BOT_TOKEN)
 })()
+
+async function process(browser, account, channelLogs) {
+    let page = await browser.newPage()
+    await page.setUserAgent(userAgent.toString())
+    await page.setDefaultTimeout(10000)
+
+    try {
+        await page.goto(`https://fr.grepolis.com/`, {
+            waitUntil: 'networkidle2',
+            timeout: 0,
+        })
+
+        let user = new User(page, account.USERNAME, account.PASSWORD, account.WORLD)
+        await user.auth()
+
+        for (let rep = 1; rep < 1000; rep++) {
+            const time = utils.datetimeNow()
+            await utils.sleep(utils.random(200, 4000))
+            await premium.collectResources(page)
+            channelLogs.send(`${time} - x${rep}`)
+            await utils.sleep(600000)
+        }
+    } catch (error) {
+        await page.close()
+        process(browser, account, channelLogs)
+    }
+}
