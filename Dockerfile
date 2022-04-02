@@ -8,7 +8,7 @@ RUN apk add --no-cache \
       ca-certificates \
       ttf-freefont \
       nodejs \
-      yarn
+      npm
 
 WORKDIR /app
 
