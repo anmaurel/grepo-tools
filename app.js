@@ -13,7 +13,7 @@ import utils from './app/utils.js'
     const browser = await puppeteer.launch({
         args: [`--window-size=1920,1080`, '--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
         defaultViewport: null,
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
     })
 
@@ -23,8 +23,8 @@ import utils from './app/utils.js'
 
     const prefix = '!'
 
-    const channelGeneral = client.channels.cache.get('764795042468200482')
-    const channelLogs = client.channels.cache.get('764796155824439296')
+    let worldsOpened = []
+    let pagesOpened = []
 
     client.on('messageCreate', async (message) => {
         if (message.author.bot) return
@@ -34,47 +34,51 @@ import utils from './app/utils.js'
         const args = commandBody.split(' ')
         const command = args.shift().toLowerCase()
 
+        const channelGeneral = client.channels.cache.get('764795042468200482')
+        const channelLogs = client.channels.cache.get('764796155824439296')
+
         setTimeout(() => message.delete(), 1000)
 
         if (args.length == 1) {
             if (command === 'run') {
                 info.credentials.forEach(async (account) => {
                     if (args[0] === account.WORLD_ID) {
+                        worldsOpened.push(args[0])
                         channelLogs.send(`${args[0]} launched`)
 
-                        process(browser, account, channelLogs)
+                        process(browser, account, channelLogs, worldsOpened, pagesOpened)
                     } else {
                         channelLogs.send(`World ${args[0]} not found`)
                     }
                 })
             } else if (command === 'stop') {
-                let pages = await browser.pages()
-                // console.log(pages.length);
+                if (worldsOpened.indexOf(args[0]) >= 0) {
+                    const pageIndex = pagesOpened.findIndex(obj => obj.world === args[0])
+                    await pagesOpened[pageIndex].page.close()
+                    pagesOpened.splice(pageIndex, 1)
 
-                for (const p of pages) {
-                    if (p.url() != '' && p.url() != 'about:blank') {
-                        let baseUrl = p.url().toString()
-                        let u = baseUrl.split('//')
-                        let ur = u[1].split('/')
-                        let url = ur[0].split('.')
+                    const worldIndex = worldsOpened.find(element => element === args[0])
+                    worldsOpened.splice(worldIndex, 1)
 
-                        if (url[0] === args[0]) {
-                            p.close()
-                            channelLogs.send(`${args[0]} stopped`)
-                        }
-                    }
+                    channelLogs.send(`${args[0]} stopped`)
+                } else {
+                    channelLogs.send(`Impossible to stop ${args[0]} because it is not open`)
                 }
             }
         } else {
-            channelLogs.send('Unknown arguments')
+            channelLogs.send('error - Unknown arguments')
         }
     })
 
     client.login(info.BOT_TOKEN)
 })()
 
-async function process(browser, account, channelLogs) {
+async function process(browser, account, channelLogs, worldsOpened, pagesOpened) {
     let page = await browser.newPage()
+    pagesOpened.push({
+        world: account.WORLD_ID,
+        page: page
+    })
     await page.setUserAgent(userAgent.toString())
     await page.setDefaultTimeout(10000)
 
@@ -95,7 +99,6 @@ async function process(browser, account, channelLogs) {
             await utils.sleep(600000)
         }
     } catch (error) {
-        await page.close()
-        process(browser, account, channelLogs)
+        channelLogs.send(`error - ${error}`)
     }
 }
