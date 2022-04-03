@@ -1,5 +1,12 @@
-version: '3.7'
+version: '3.8'
 services:
+    vue-client:
+        container_name: grepo-tools-client
+        build: ./client
+        ports:
+            - 8080:8080
+        restart: on-failure
+
     node-server:
         container_name: grepo-tools-server
         build: ./server
