@@ -1,8 +1,10 @@
 version: '3.7'
 services:
-    node-server:
-        container_name: grepo-tools_server
-        build: ./
+    grepo-tools-server:
+        container_name: grepo-tools-server
+        build: ./server
+        ports:
+            - 9000:9000
         networks:
             default:
                 ipv4_address: 192.168.1.82
