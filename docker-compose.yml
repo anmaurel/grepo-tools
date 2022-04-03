@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-    grepo-tools-server:
+    node-server:
         container_name: grepo-tools-server
         build: ./
         ports:
