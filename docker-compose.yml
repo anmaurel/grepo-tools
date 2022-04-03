@@ -2,7 +2,7 @@ version: '3.7'
 services:
     grepo-tools-server:
         container_name: grepo-tools-server
-        build: ./server
+        build: ./
         ports:
             - 9000:9000
         networks:
