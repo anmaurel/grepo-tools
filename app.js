@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import userAgent from 'user-agents'
 
-import User from './app/classes/User.js'
+import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
-import utils from './app/utils.js'
+import utils from './app/utils'
 
 (async () => {
     let browser = await puppeteer.startBrowser()
