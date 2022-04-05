@@ -1,6 +1,5 @@
 FROM alpine:3.14
 
-RUN ping 8.8.8.8
 RUN apk add --no-cache \
       chromium \
       nss \
