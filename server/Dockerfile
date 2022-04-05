@@ -8,7 +8,8 @@ RUN apt install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2
 
 COPY package*.json ./
 
-RUN npm i
+RUn node -v
+RUN npm install
 
 COPY . .
 
