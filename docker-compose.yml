@@ -10,8 +10,6 @@ services:
     node-server:
         container_name: grepo-tools-server
         build: ./server
-        volumes:
-            - /docker/resolv.conf:/etc/resolv.conf
         networks:
             default:
                 ipv4_address: 192.168.1.82
