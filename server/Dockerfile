@@ -10,6 +10,8 @@ RUN apk add --no-cache \
       ca-certificates \
       ttf-freefont
 
+RUN sysctl -w kernel.unprivileged_userns_clone=1
+
 COPY package*.json ./
 
 RUN npm i
