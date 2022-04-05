@@ -5,7 +5,7 @@ import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
 import utils from './app/utils'
 
-;(async () => {
+(async () => {
     let browser = await puppeteer.startBrowser()
     const discordClient = discord.startDiscordClient()
 
