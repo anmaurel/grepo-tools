@@ -18,4 +18,4 @@ RUN npm i
 
 COPY . .
 
-CMD [ "node --experimental-specifier-resolution=node", "app.js" ]
+CMD [ "node", "--experimental-specifier-resolution=node", "app.js" ]
