@@ -18,4 +18,4 @@ RUN npm i
 
 COPY . .
 
-CMD ["npm run start"]
+CMD [ "node --experimental-specifier-resolution=node", "app.js" ]
