@@ -9,6 +9,6 @@ export default {
             ignoreHTTPSErrors: true,
         })
 
-        return browser;
+        return browser
     },
 }

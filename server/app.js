@@ -5,7 +5,7 @@ import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
 import utils from './app/utils'
 
-(async () => {
+;(async () => {
     let browser = await puppeteer.startBrowser()
     const discordClient = discord.startDiscordClient()
 
@@ -35,7 +35,7 @@ import utils from './app/utils'
                 }
             } else if (command === 'stop') {
                 if (args[0] === grepoWorldId) {
-                    let pages = await browser.pages();
+                    let pages = await browser.pages()
                     for (const page of pages) {
                         await page.close()
                     }
