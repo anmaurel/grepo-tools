@@ -8,9 +8,7 @@ RUN apk add --no-cache \
       freetype \
       harfbuzz \
       ca-certificates \
-      ttf-freefont \
-      nodejs \
-      npm
+      ttf-freefont
 
 COPY package*.json ./
 
