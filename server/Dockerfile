@@ -1,22 +1,22 @@
-FROM alpine
+FROM alpine:3.14
 
-# RUN ping 8.8.8.8
-# RUN apk add --no-cache \
-#       chromium \
-#       nss \
-#       freetype \
-#       harfbuzz \
-#       ca-certificates \
-#       ttf-freefont \
-#       nodejs \
-#       npm
+RUN ping 8.8.8.8
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont \
+      nodejs \
+      npm
 
 WORKDIR /app
 
 COPY package*.json ./
 
-# RUN npm i
+RUN npm i
 
 COPY . .
 
-# CMD ["npm run start"]
+CMD ["npm run start"]
