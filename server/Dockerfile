@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM mhart/alpine-node:16.4
 
 RUN apk add --no-cache \
       chromium \
