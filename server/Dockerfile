@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM node:17
 
 WORKDIR /app
 
@@ -8,7 +8,6 @@ RUN apt install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2
 
 COPY package*.json ./
 
-RUn node -v
 RUN npm install
 
 COPY . .
