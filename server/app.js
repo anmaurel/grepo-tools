@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import userAgent from 'user-agents'
 
 import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
@@ -56,7 +55,7 @@ import utils from './app/utils'
 async function main(browser, channelLogs) {
     let page = await browser.newPage()
 
-    await page.setUserAgent(userAgent.toString())
+    await puppeteer.hideAutomation(page)
     await page.setDefaultTimeout(10000)
 
     try {
