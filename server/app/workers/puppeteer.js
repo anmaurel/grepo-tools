@@ -104,7 +104,7 @@ export default {
 
         await page.evaluateOnNewDocument(() => {
             Object.defineProperty(navigator, 'languages', {
-                get: () => ['fr-FR', 'fr', 'en-US', 'en'],
+                get: () => ['fr-FR', 'fr'],
             })
         })
 
