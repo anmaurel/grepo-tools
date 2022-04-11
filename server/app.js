@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import userAgent from 'user-agents'
 
 import User from './app/classes/User'
 import { grepolis, puppeteer } from './app/workers/'
@@ -10,8 +9,8 @@ import utils from './app/utils'
 
     let page = await browser.newPage()
 
-    await page.setUserAgent(userAgent.toString())
-    await page.setDefaultTimeout(10000)
+    await puppeteer.hideAutomation(page)
+    page.setDefaultTimeout(10000)
 
     try {
         await page.goto(`https://fr.grepolis.com/`, {
