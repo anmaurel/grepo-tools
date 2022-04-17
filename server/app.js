@@ -8,8 +8,6 @@ import utils from './app/utils'
     let browser = await puppeteer.startBrowser()
 
     let page = await browser.newPage()
-
-    await puppeteer.hideAutomation(page)
     page.setDefaultTimeout(10000)
 
     try {
