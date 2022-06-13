@@ -1,4 +1,5 @@
 import grepolis from './grepolis'
 import puppeteer from './puppeteer'
+import discord from './discord'
 
-export { grepolis, puppeteer }
+export { grepolis, puppeteer, discord }
