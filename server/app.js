@@ -4,11 +4,24 @@ import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
 import utils from './app/utils'
 
-(async () => {
+const worlds = [
+    {
+        name: process.env.GREPO_WORLD,
+        id: process.env.GREPO_WORLD_ID,
+        usr: process.env.GREPO_USERNAME,
+        pswd: process.env.GREPO_PASSWORD,
+    },
+    {
+        name: process.env.GREPO2_WORLD,
+        id: process.env.GREPO2_WORLD_ID,
+        usr: process.env.GREPO2_USERNAME,
+        pswd: process.env.GREPO2_PASSWORD,
+    },
+]
+
+const discordListener = async () => {
     let browser = await puppeteer.startBrowser()
     const discordClient = discord.startDiscordClient()
-
-    const grepoWorldId = process.env.GREPO_WORLD_ID
     const prefix = '!'
 
     discordClient.on('messageCreate', async (message) => {
@@ -19,40 +32,42 @@ import utils from './app/utils'
         const args = commandBody.split(' ')
         const command = args.shift().toLowerCase()
 
-        const channelGeneral = discordClient.channels.cache.get('764795042468200482')
+        // const channelGeneral = discordClient.channels.cache.get('764795042468200482')
         const channelLogs = discordClient.channels.cache.get('764796155824439296')
 
         setTimeout(() => message.delete(), 1000)
 
         if (args.length == 1) {
             if (command === 'run') {
-                if (args[0] === grepoWorldId) {
-                    channelLogs.send(`${args[0]} launched`)
-                    main(browser, channelLogs)
-                } else {
-                    channelLogs.send(`error - World ${args[0]} it is not found`)
-                }
-            } else if (command === 'stop') {
-                if (args[0] === grepoWorldId) {
-                    let pages = await browser.pages()
-                    for (const page of pages) {
-                        await page.close()
-                    }
-
-                    channelLogs.send(`${args[0]} stopped`)
-                } else {
-                    channelLogs.send(`error - World ${args[0]} it is not open`)
+                switch (args[0]) {
+                    case worlds[0].id:
+                        channelLogs.send(`${args[0]} launched`)
+                        main(browser, channelLogs, worlds[0])
+                        break
+                    case worlds[1].id:
+                        channelLogs.send(`${args[0]} launched`)
+                        main(browser, channelLogs, worlds[1])
+                        break
+                    default:
+                        channelLogs.send(`error - World ${args[0]} it is not found`)
+                        break
                 }
             }
         } else {
+            const pages = await browser.pages()
+            for(const page of pages) await page.close()
+
             channelLogs.send('error - Unknown arguments')
         }
     })
 
     discordClient.login(process.env.DISCORD_BOT_TOKEN)
-})()
+}
 
-async function main(browser, channelLogs) {
+const main = async (browser, channelLogs, world) => {
+    const pages = await browser.pages()
+    for(const page of pages) await page.close()
+
     let page = await browser.newPage()
     page.setDefaultTimeout(10000)
 
@@ -62,7 +77,7 @@ async function main(browser, channelLogs) {
             timeout: 0,
         })
 
-        let user = new User(page, process.env.GREPO_USERNAME, process.env.GREPO_PASSWORD, process.env.GREPO_WORLD)
+        let user = new User(page, world.usr, world.pswd, world.name)
         await user.auth()
 
         for (let rep = 1; rep < 1000; rep++) {
@@ -76,3 +91,5 @@ async function main(browser, channelLogs) {
         channelLogs.send(`error - ${error}`)
     }
 }
+
+discordListener()
