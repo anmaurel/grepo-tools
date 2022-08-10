@@ -42,11 +42,11 @@ const discordListener = async () => {
                 switch (args[0]) {
                     case worlds[0].id:
                         channelLogs.send(`${args[0]} launched`)
-                        main(browser, channelLogs, worlds[0])
+                        main(browser, channelLogs, worlds[0], discordClient)
                         break
                     case worlds[1].id:
                         channelLogs.send(`${args[0]} launched`)
-                        main(browser, channelLogs, worlds[1])
+                        main(browser, channelLogs, worlds[1], discordClient)
                         break
                     default:
                         channelLogs.send(`error - World ${args[0]} it is not found`)
@@ -64,7 +64,7 @@ const discordListener = async () => {
     discordClient.login(process.env.DISCORD_BOT_TOKEN)
 }
 
-const main = async (browser, channelLogs, world) => {
+const main = async (browser, channelLogs, world, discordClient) => {
     const pages = await browser.pages()
     for(const page of pages) await page.close()
 
@@ -84,7 +84,11 @@ const main = async (browser, channelLogs, world) => {
             const time = utils.datetimeNow()
             await utils.sleep(utils.random(600, 6000))
             await grepolis.collectResources(page)
-            channelLogs.send(`${time} - x${rep}`)
+
+            discordClient.on('ready', () => {
+                channelLogs.send(`${time} - x${rep}`)
+            })
+
             await utils.sleep(600000)
         }
     } catch (error) {
