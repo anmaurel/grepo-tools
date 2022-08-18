@@ -48,9 +48,6 @@ const discordListener = async () => {
                         channelLogs.send(`${args[0]} launched`)
                         main(browser, channelLogs, worlds[1], discordClient)
                         break
-                    default:
-                        channelLogs.send(`error - World ${args[0]} it is not found`)
-                        break
                 }
             }
         } else {
@@ -85,9 +82,9 @@ const main = async (browser, channelLogs, world, discordClient) => {
             await utils.sleep(utils.random(600, 6000))
             await grepolis.collectResources(page)
 
-            discordClient.on('ready', () => {
+            // discordClient.on('ready', () => {
                 channelLogs.send(`${time} - x${rep}`)
-            })
+            // })
 
             await utils.sleep(600000)
         }
