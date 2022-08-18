@@ -35,7 +35,7 @@ const discordListener = async () => {
         // const channelGeneral = discordClient.channels.cache.get('764795042468200482')
         const channelLogs = discordClient.channels.cache.get('764796155824439296')
 
-        setTimeout(() => message.delete(), 1000)
+        // setTimeout(() => message.delete(), 1000)
 
         if (args.length == 1) {
             if (command === 'run') {
