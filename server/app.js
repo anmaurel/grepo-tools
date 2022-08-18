@@ -85,9 +85,7 @@ const main = async (browser, channelLogs, world, discordClient) => {
             await utils.sleep(utils.random(600, 6000))
             await grepolis.collectResources(page)
 
-            discordClient.on('ready', () => {
-                channelLogs.send(`${time} - x${rep}`)
-            })
+            channelLogs.send(`${time} - x${rep}`)
 
             await utils.sleep(600000)
         }
