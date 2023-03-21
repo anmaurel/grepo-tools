@@ -4,20 +4,12 @@ import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
 import utils from './app/utils'
 
-const worlds = [
-    {
-        name: process.env.GREPO_WORLD,
-        id: process.env.GREPO_WORLD_ID,
-        usr: process.env.GREPO_USERNAME,
-        pswd: process.env.GREPO_PASSWORD,
-    },
-    {
-        name: process.env.GREPO2_WORLD,
-        id: process.env.GREPO2_WORLD_ID,
-        usr: process.env.GREPO2_USERNAME,
-        pswd: process.env.GREPO2_PASSWORD,
-    },
-]
+const world = {
+    name: process.env.GREPO_WORLD,
+    id: process.env.GREPO_WORLD_ID,
+    usr: process.env.GREPO_USERNAME,
+    pswd: process.env.GREPO_PASSWORD,
+}
 
 const discordListener = async () => {
     let browser = await puppeteer.startBrowser()
@@ -39,20 +31,12 @@ const discordListener = async () => {
 
         if (args.length == 1) {
             if (command === 'run') {
-                switch (args[0]) {
-                    case worlds[0].id:
-                        channelLogs.send(`${args[0]} launched`)
-                        main(browser, channelLogs, worlds[0], discordClient)
-                        break
-                    case worlds[1].id:
-                        channelLogs.send(`${args[0]} launched`)
-                        main(browser, channelLogs, worlds[1], discordClient)
-                        break
-                }
+                channelLogs.send(`${args[0]} launched`)
+                main(browser, channelLogs, world, discordClient)
             }
         } else {
             const pages = await browser.pages()
-            for(const page of pages) await page.close()
+            for (const page of pages) await page.close()
 
             channelLogs.send('error - Unknown arguments')
         }
@@ -63,7 +47,7 @@ const discordListener = async () => {
 
 const main = async (browser, channelLogs, world, discordClient) => {
     const pages = await browser.pages()
-    for(const page of pages) await page.close()
+    for (const page of pages) await page.close()
 
     let page = await browser.newPage()
     page.setDefaultTimeout(10000)
@@ -83,7 +67,7 @@ const main = async (browser, channelLogs, world, discordClient) => {
             await grepolis.collectResources(page)
 
             // discordClient.on('ready', () => {
-                channelLogs.send(`${time} - x${rep}`)
+            channelLogs.send(`${time} - x${rep}`)
             // })
 
             await utils.sleep(600000)
