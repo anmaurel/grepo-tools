@@ -4,7 +4,7 @@ export default {
     async startBrowser() {
         let browser = await puppeteer.launch({
             args: [
-                `--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.65`,
+                `--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 OPR/109.0.0.0`,
                 `--window-size=1920,1080`,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -20,7 +20,7 @@ export default {
     },
     async hideAutomation(page) {
         const userAgent =
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.65'
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 OPR/109.0.0.0'
         await page.setUserAgent(userAgent)
 
         await page.evaluateOnNewDocument(() => {
