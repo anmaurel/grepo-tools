@@ -12,4 +12,12 @@ export default {
     await page.click('#fto_claim_button')
     await page.waitForTimeout(utils.random(600, 1600))
   },
+  async checkFullResources(browser, page) {
+    const resources = await page.$$('#ui_box > div.ui_resources_bar > div.indicator.limit_reached')
+
+    if (resources.length > 1) { 
+      console.log('resources full')
+      browser.close()
+    }
+  },
 }
