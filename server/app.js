@@ -27,7 +27,8 @@ import utils from './app/utils'
         if (command === 'run') {
             if (args[0] === grepoWorldId) {
                 channelLogs.send(`${args[0]} launched`)
-                main(browser, channelLogs, args[1])
+                const maxCount = args[1] ? Number(args[1]) : 36
+                main(browser, channelLogs, maxCount)
             } else {
                 channelLogs.send(`error - World ${args[0]} it is not found`)
             }
@@ -50,7 +51,6 @@ import utils from './app/utils'
 
 async function main(browser, channelLogs, xtime) {
     let page = await browser.newPage()
-    const maxCount = xtime ?? 36
 
     await puppeteer.hideAutomation(page)
     await page.setDefaultTimeout(10000)
@@ -64,7 +64,7 @@ async function main(browser, channelLogs, xtime) {
         let user = new User(page, process.env.GREPO_USERNAME, process.env.GREPO_PASSWORD, process.env.GREPO_WORLD)
         await user.auth()
 
-        for (let rep = 1; rep < maxCount; rep++) {
+        for (let rep = 1; rep < xtime; rep++) {
             const time = utils.datetimeNow()
             await utils.sleep(utils.random(600, 6000))
             await grepolis.collectResources(page)
