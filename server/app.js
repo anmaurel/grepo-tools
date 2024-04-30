@@ -28,7 +28,7 @@ import utils from './app/utils'
             if (command === 'run') {
                 if (args[0] === grepoWorldId) {
                     channelLogs.send(`${args[0]} launched`)
-                    main(browser, channelLogs)
+                    main(browser, channelLogs, args[1])
                 } else {
                     channelLogs.send(`error - World ${args[0]} it is not found`)
                 }
@@ -52,8 +52,9 @@ import utils from './app/utils'
     discordClient.login(process.env.DISCORD_BOT_TOKEN)
 })()
 
-async function main(browser, channelLogs) {
+async function main(browser, channelLogs, xtime) {
     let page = await browser.newPage()
+    const maxCount = xtime ?? 36
 
     await puppeteer.hideAutomation(page)
     await page.setDefaultTimeout(10000)
@@ -67,7 +68,7 @@ async function main(browser, channelLogs) {
         let user = new User(page, process.env.GREPO_USERNAME, process.env.GREPO_PASSWORD, process.env.GREPO_WORLD)
         await user.auth()
 
-        for (let rep = 1; rep < 1000; rep++) {
+        for (let rep = 1; rep < maxCount; rep++) {
             const time = utils.datetimeNow()
             await utils.sleep(utils.random(600, 6000))
             await grepolis.collectResources(page)
