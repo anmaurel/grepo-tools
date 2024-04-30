@@ -4,7 +4,7 @@ import User from './app/classes/User'
 import { grepolis, puppeteer, discord } from './app/workers/'
 import utils from './app/utils'
 
-(async () => {
+;(async () => {
     let browser = await puppeteer.startBrowser()
     const discordClient = discord.startDiscordClient()
 
@@ -19,33 +19,29 @@ import utils from './app/utils'
         const args = commandBody.split(' ')
         const command = args.shift().toLowerCase()
 
-        const channelGeneral = discordClient.channels.cache.get('764795042468200482')
+        // const channelGeneral = discordClient.channels.cache.get('764795042468200482')
         const channelLogs = discordClient.channels.cache.get('764796155824439296')
 
         setTimeout(() => message.delete(), 1000)
 
-        if (args.length == 1) {
-            if (command === 'run') {
-                if (args[0] === grepoWorldId) {
-                    channelLogs.send(`${args[0]} launched`)
-                    main(browser, channelLogs, args[1])
-                } else {
-                    channelLogs.send(`error - World ${args[0]} it is not found`)
-                }
-            } else if (command === 'stop') {
-                if (args[0] === grepoWorldId) {
-                    let pages = await browser.pages()
-                    for (const page of pages) {
-                        await page.close()
-                    }
-
-                    channelLogs.send(`${args[0]} stopped`)
-                } else {
-                    channelLogs.send(`error - World ${args[0]} it is not open`)
-                }
+        if (command === 'run') {
+            if (args[0] === grepoWorldId) {
+                channelLogs.send(`${args[0]} launched`)
+                main(browser, channelLogs, args[1])
+            } else {
+                channelLogs.send(`error - World ${args[0]} it is not found`)
             }
-        } else {
-            channelLogs.send('error - Unknown arguments')
+        } else if (command === 'stop') {
+            if (args[0] === grepoWorldId) {
+                let pages = await browser.pages()
+                for (const page of pages) {
+                    await page.close()
+                }
+
+                channelLogs.send(`${args[0]} stopped`)
+            } else {
+                channelLogs.send(`error - World ${args[0]} it is not open`)
+            }
         }
     })
 
