@@ -19,7 +19,7 @@ import utils from './app/utils'
         const args = commandBody.split(' ')
         const command = args.shift().toLowerCase()
 
-        // const channelGeneral = discordClient.channels.cache.get('764795042468200482')
+        const channelGeneral = discordClient.channels.cache.get('764795042468200482')
         const channelLogs = discordClient.channels.cache.get('764796155824439296')
 
         setTimeout(() => message.delete(), 1000)
