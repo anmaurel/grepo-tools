@@ -14,7 +14,8 @@ const main = async (world) => {
   try {
     let browser = await puppeteer.startBrowser()
     let page = await browser.newPage()
-    page.setDefaultTimeout(10000)
+
+    await page.setDefaultTimeout(10000)
 
     await page.goto(`https://fr.grepolis.com/`, {
       waitUntil: 'networkidle2',
@@ -29,7 +30,7 @@ const main = async (world) => {
       await utils.sleep(utils.random(600, 6000))
       await grepolis.collectResources(page)
       console.log(`${time} - x${rep}`)
-      await grepolis.checkFullResources(browser, page)
+      // await grepolis.checkFullResources(browser, page)
       await utils.sleep(600000)
     }
   } catch (error) {
